@@ -7,7 +7,9 @@ def main():
 	pygame.init()
 
 	# Variable definitions
+	clock = pygame.time.Clock()
 	screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+	dt = 0 #Clock Timer
 	
 	# Print starting messages
 	print("Starting Asteroids!")
@@ -22,8 +24,10 @@ def main():
 				pygame.quit()
 				return
 	
+		clock.tick(60)
 		# Keep this last
 		pygame.display.flip()
+		
 		
 
 	
