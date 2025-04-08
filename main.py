@@ -22,13 +22,15 @@ def main():
 	# Game loop start
 	while True:
 		screen.fill("black")
-		player.draw(screen)
+		player.draw_player(screen)
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				pygame.quit()
 				return
 	
-		clock.tick(60)
+		dt = clock.tick(60)/1000
+
+		player.update(dt)
 		# Keep this last
 		pygame.display.flip()
 
