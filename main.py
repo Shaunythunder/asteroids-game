@@ -43,6 +43,12 @@ def main():
 		dt = clock.tick(60)/1000
 
 		updatable_objects.update(dt)
+
+		for asteroid in asteroid_objects:
+			if player.check_collision(asteroid):
+				print("GAME OVER")
+				pygame.quit()
+				return
 		# Keep this last
 		pygame.display.flip()
 
