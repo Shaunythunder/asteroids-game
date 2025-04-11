@@ -6,6 +6,7 @@ class Player(CircleShape):
     def __init__(self, x, y):
         super().__init__(x, y, PLAYER_RADIUS)
         self.rotation = 0
+        self.timer = 0
 
     # Logic for creating player shape
     def player_triangle(self):
@@ -23,6 +24,7 @@ class Player(CircleShape):
 
     def update(self, dt):
         keys = pygame.key.get_pressed()
+        self.timer -= dt
 
         if keys[pygame.K_a]:
             self.rotate_left(dt)
@@ -35,6 +37,11 @@ class Player(CircleShape):
 
         if keys[pygame.K_s]:
             self.move_backward(dt)
+
+        if keys[pygame.K_SPACE]:
+            if self.timer < 0:
+                self.timer = PLAYER_SHOT_COOLDOWN
+                self.shoot()
 
 
     def move_forward(self, dt):
@@ -50,3 +57,21 @@ class Player(CircleShape):
 
     def rotate_right(self, dt):
         self.rotation += PLAYER_TURN_SPEED * dt
+
+    def shoot(self):
+        shot = Bullet(self.position.x, self.position.y, PLAYER_SHOT_RADIUS)
+        direction = pygame.Vector2(1, 0)
+        rotated_direction = direction.rotate(self.rotation + 90)
+        shot.velocity = rotated_direction * PLAYER_SHOOT_SPEED
+
+class Bullet(CircleShape):
+    def __init__(self, x, y, radius):
+        super().__init__(x, y, radius)
+
+    def draw(self, screen):
+        pygame.draw.circle(screen, "white", (self.position.x, self.position.y), self.radius, width=2)
+
+    def update(self, dt):
+        # Straight line movement
+        self.position.x += self.velocity.x * dt
+        self.position.y += self.velocity.y * dt

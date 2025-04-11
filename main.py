@@ -1,6 +1,6 @@
 import pygame
 from constants import * # Everything
-from player import Player
+from player import *
 from asteroids import Asteroid
 from asteroidfield import AsteroidField
 
@@ -13,15 +13,21 @@ def main():
 	# Variable definitions
 	clock = pygame.time.Clock()
 	dt = 0 #Clock Timer
-	updatable_objects = pygame.sprite.Group()
-	drawable_objects = pygame.sprite.Group()
+	
+	player = Player(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
+	screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+
+	asteroid_field = AsteroidField()
 	asteroid_objects = pygame.sprite.Group()
-	Player.containers = (updatable_objects, drawable_objects)
+	bullet_objects = pygame.sprite.Group()
+	drawable_objects = pygame.sprite.Group()
+	updatable_objects = pygame.sprite.Group()
+	
 	Asteroid.containers = (asteroid_objects, updatable_objects, drawable_objects)
 	AsteroidField.containers = (updatable_objects,)
-	player = Player(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
-	asteroid_field = AsteroidField()
-	screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+	Bullet.containers = (updatable_objects, drawable_objects, bullet_objects)
+	Player.containers = (updatable_objects, drawable_objects)
+	
 
 	# Print starting messages
 	print("Starting Asteroids!")
@@ -49,6 +55,13 @@ def main():
 				print("GAME OVER")
 				pygame.quit()
 				return
+			
+		for bullet in bullet_objects:
+			for asteroid in asteroid_objects:
+				if bullet.check_collision(asteroid):
+					asteroid.split()
+					bullet.kill()
+
 		# Keep this last
 		pygame.display.flip()
 
